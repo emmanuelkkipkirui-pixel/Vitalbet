@@ -1,0 +1,1 @@
+FROM node:18-alpine as builder\n\nWORKDIR /app\n\nCOPY package*.json ./\nRUN npm ci\n\nCOPY . .\n\nRUN npm run build\n\nFROM node:18-alpine\n\nWORKDIR /app\n\nCOPY --from=builder /app/dist ./dist\nCOPY --from=builder /app/package*.json ./\n\nRUN npm ci --production\n\nEXPOSE 3000\n\nCMD [\"npm\", \"run\", \"preview\"]\n
